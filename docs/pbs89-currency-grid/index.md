@@ -1,0 +1,1 @@
+Upload your currency grid into this folder in a subfolder named for your GitHub username.
