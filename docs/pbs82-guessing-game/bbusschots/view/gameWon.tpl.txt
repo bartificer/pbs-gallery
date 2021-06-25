@@ -1,0 +1,23 @@
+<div class="modal-header">
+	<h1 class="modal-title h5">🎉 Well Done!</h5>
+</div>
+<div class="modal-body">
+	<p class="lead">You guessed correctly, the number was indeed <strong>{{randomNumber}}</strong>!</p>
+	<p>It took you the following <strong>{{guessCount.total}}</strong> guesse(s) to find it:</p>
+	<p>
+		{{#guesses}}
+		<kbd>{{.}}</kbd>
+		{{/guesses}}
+		<kbd class="bg-success">{{randomNumber}}</kbd>
+	</p>
+	<p>For reference, the <i>binary search</i> algorithm would have guessed the number in the following <strong>{{binarySearch.guessCount.total}}</strong> guesse(s):</p>
+	<p>
+		{{#binarySearch.guesses}}
+		<kbd>{{.}}</kbd>
+		{{/binarySearch.guesses}}
+		<kbd class="bg-success">{{randomNumber}}</kbd>
+	</p>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-success">Play Again</button>
+</div>

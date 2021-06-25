@@ -1,0 +1,13 @@
+<div class="modal-header">
+	<h1 class="modal-title h5">
+		<i class="fas fa-question-circle d-inline-block mr-2"></i>
+		Are you Sure?
+	</h5>
+</div>
+<div class="modal-body">
+	<p>Are you sure you want to quit after just {{guesses.length}} guess(es)?</p>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary cancelBtn">Cancel</button>
+	<button type="button" class="btn btn-success okBtn">Start a New Game</button>
+</div>

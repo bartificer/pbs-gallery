@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+    <g id="squirrely-brackeets" serif:id="squirrely brackeets">
+        <g transform="matrix(1.05371,0,0,0.991639,-11.9779,13.6182)">
+            <text x="5.961px" y="206.484px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:276.144px;fill:rgb(0,64,141);">{</text>
+        </g>
+        <g transform="matrix(-1.05371,-1.29043e-16,1.21249e-16,-0.990074,310.379,281.389)">
+            <text x="5.961px" y="206.484px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:276.144px;fill:rgb(0,64,141);">{</text>
+        </g>
+    </g>
+    <g id="Alien">
+        <g transform="matrix(1.03887,0,0,0.996863,-16.5978,3.04186)">
+            <circle cx="167.084" cy="105.076" r="58.049"/>
+        </g>
+        <g transform="matrix(1,0,0,0.987529,0,3.01799)">
+            <path d="M80.625,219.574C86.255,182.717 118.849,154.408 158.162,154.408C195.403,154.408 226.614,179.811 234.586,213.82C213.642,231.263 185.179,241.995 153.841,241.995C126.113,241.995 100.635,233.593 80.625,219.574Z"/>
+        </g>
+        <g transform="matrix(0.682327,0.570121,-0.628816,0.752574,121.408,1.47266)">
+            <path d="M122.947,147.32C122.947,143.408 119.445,140.232 115.13,140.232L61.768,140.232C57.453,140.232 53.95,143.408 53.95,147.32C53.95,151.232 57.453,154.408 61.768,154.408L115.13,154.408C119.445,154.408 122.947,151.232 122.947,147.32Z"/>
+        </g>
+    </g>
+    <g>
+        <g id="eye-mask" serif:id="eye mask" transform="matrix(1.01096,0,0,0.988581,-2.30073,0.675708)">
+            <path d="M200.056,103.488C200.056,94.085 192.591,86.452 183.397,86.452L128.877,86.452C119.683,86.452 112.218,94.085 112.218,103.488L112.218,113.869C112.218,123.272 119.683,130.905 128.877,130.905L183.397,130.905C192.591,130.905 200.056,123.272 200.056,113.869L200.056,103.488Z" style="fill:rgb(251,236,214);"/>
+        </g>
+        <g id="left-eye" serif:id="left eye" transform="matrix(1.2512,0,0,1.46881,-118.454,3.95344)">
+            <ellipse cx="204.737" cy="71.087" rx="5.634" ry="6.235"/>
+        </g>
+        <g id="right-eye" serif:id="right eye" transform="matrix(1.2512,0,0,1.46881,-82.5198,3.95344)">
+            <ellipse cx="204.737" cy="71.087" rx="5.634" ry="6.235"/>
+        </g>
+    </g>
+</svg>

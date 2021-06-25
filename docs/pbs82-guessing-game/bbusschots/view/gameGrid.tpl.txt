@@ -1,0 +1,28 @@
+<div class="container">
+	<div class="row">
+		<div class="col-12" id="gameMessageArea">
+			<div class="alert alert-info mb-2" role="alert">
+				<i class="fas fa-info-circle d-inline-block mr-2"></i>
+				Guess a number by clicking on it
+			</div>
+		</div>
+	</div>
+	<div class="row no-gutters">
+		{{#groups}}
+		<div class="col-12 col-lg-6 mb-2 mb-lg-1 p-lg-1">
+			<div class="btn-group w-100" role="group">
+				{{#values}}
+					<button type="button" class="btn btn-secondary btn-small guess" value="{{{.}}}">{{.}}</button>
+				{{/values}}
+			</div>
+		</div>
+		{{/groups}}
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div class="alert alert-secondary text-center" role="alert" id="guessesDisplay">
+				<small class="text-muted">You've not made any guesses yet</small>
+			</div>
+		</div>
+	</div>
+</div>

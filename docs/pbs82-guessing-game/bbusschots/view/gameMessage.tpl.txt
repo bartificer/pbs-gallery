@@ -1,0 +1,4 @@
+<div class="alert alert-{{{context}}} mb-1" role="alert">
+	<i class="{{{icon}}} d-inline-block mr-2"></i>
+	{{message}}
+</div>
