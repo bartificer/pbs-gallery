@@ -19,6 +19,7 @@ Set at the end of [instalment 42](https://bartificer.net/pbs42) with sample solu
 The final vesion of this challenge was set at the start of [instalment 82](https://bartificer.net/pbs82) with sample solution described in [instalment 83](https://bartificer.net/pbs83).
 
 * [Solution from Bart Busschots](pbs82-guessing-game/bbusschots/) (contributed as a worked example in [instalment 119](https://bartificer.net/pbs119)).
+* [Solution from Allison Sheridan](pbs82-guessing-game/nosillacast/)(An even more amazing game)
 
 ## Currency Converter
 
