@@ -1,0 +1,395 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Include Bootstrap 4 CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<!-- Include Font Awesome 4 -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<title>Guess the Number</title>
+</head>
+<body>
+	<nav class='navbar navbar-expand-md navbar-light'>
+		<a class='navbar-brand' href="#">Navigation</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						PBS Resources
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="nav-link dropdown-item" href="https://www.bartbusschots.ie/s/2019/05/04/pbs-77-of-x-callbacks-ajax/"  rel="no opener" target="_blank">PBS 77</a>
+						<a class="nav-link dropdown-item" href="https://www.bartbusschots.ie/s/2019/05/18/pbs-78-of-x-is-js-bootstrap-popovers/"  rel="no opener" target="_blank">PBS 78 — is.js & Popovers</a>
+						<div class="dropdown-divider"></div>
+						<a class="nav-link dropdown-item" href="https://www.podfeet.com/blog/pbs-index/"  rel="no opener" target="_blank">PBS Index</a>
+						<a class="nav-link dropdown-item" href="https://getbootstrap.com/docs/4.3/getting-started/introduction/"  rel="no opener" target="_blank">Bootstrap Docs</a>
+						<a class="nav-link dropdown-item" href="https://api.jquery.com"  rel="no opener" target="_blank">jQuery API</a>
+						<a class="nav-link dropdown-item" href="https://api.jquery.com/category/ajax/"  rel="no opener" target="_blank">AJAX API</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<header class='container'>
+		<div class='row'>
+			<div class='mt-3'>
+				<h1 class='h3 bg-light text-center pt-3 pb-3'>Shall We Play a Game?</h1>
+				<p class='col'>Enter your guess into the text field, and then push the "Play Game" button.  I'll tell you if you're above, below, or spot on the correct number. If you ever win, and I seriously doubt that, I'll tell you how many guesses you took before you succeeded at your task.</p>
+			</div>
+		</div>
+	</header>
+
+	<!-- Create the input form -->
+	<form class='container' id='number-form' action='javascript:void(0);'>
+		<div class='row'> <!-- row for number entry, push buttons, circle & list of guesses -->
+			<div class='col-7'> <!-- column for number entry & push buttons & circle -->
+
+				<div class='row form-group'><!-- row for number entry -->
+					<label for='myGuess' class='col text-center'>Guess an integer</br>from 1-100:</label>
+					<input type='number' class='form-control ml-2' id='myGuess' placeholder=''>
+				</div>
+
+				<div class="row form-group"> <!-- Row for buttons -->
+					<div class='col'> <!-- col for Start Button -->
+						<button type="submit" id='startBtn' class="btn btn-primary" >Play Game </br><i class="fas fa-dice-five ml-1"></i></button>
+					</div>
+					<div class='col'> <!-- col for Reset Button -->
+						<button type='button' id='resetBtn' class='btn btn-danger' >Reset Game </br><i class='fas fa-undo ml-1'></i></button>
+					</div>
+				</div>
+
+				<div class='row'> <!-- The progress circle -->
+					<div class = 'col'>
+							<p>Eliminated Values in RED</p>
+							<div class="circle" id='rangeCircle'></div>
+						</div>
+				</div>
+
+			</div> <!-- close col for number entry & push buttons -->
+
+			<div class="col" > <!-- col for list of guesses -->
+				<div class="bg-light text-info text-center" id='guesses'>
+
+						<!-- <div id="tpl_response_ph_low"></div>
+						<div id="tpl_response_ph_high"></div>
+						<div id="tpl_response_ph_correct"></div> -->
+				</div>
+			</div> <!-- close col for list of guesses -->
+		</div> <!-- end row for number entry, push buttons & list of guesses -->
+	</form>
+
+	<!-- The Modal (Hidden by Default) -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modal_title">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="h5 modal-title" id="modal_title">Your Results</h1>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Modal body text goes here.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" id='dismissBtn'>OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Last Modified info on page -->
+<div class="container">
+	<div class="row">	<!-- outer container, row 8> -->
+		<div class="col-12">	<!-- outer container, col 1> -->
+			<aside class="float-right text-muted p-2 mt-5 bg-light border rounded">
+			<p class="p-1 d-inline font-weight-light align-right" style="font-size: 10pt"> Last modified on:</p>
+			<p class="d-inline font-weight-light align-right" style="font-size: 10pt" id='date-time' >replace me</p>
+			</aside>
+		</div>		<!-- outer container, end of col> -->
+	</div>		<!-- outer container, end of row 8> -->
+</div>
+
+
+<!-- Include Bootstrap JavaScript from CDNs -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<!-- is.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/is_js/0.9.0/is.min.js" integrity="sha256-lnJeulOa3e5IO2EzHr8jKJ3CbT80MBwkS5a+n2ooIr4=" crossorigin="anonymous"></script>
+<!-- Draw a circle -->
+<script src="jquery-circle-progress/dist/circle-progress.js"></script>
+<!-- Include mustache.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.js" integrity="sha256-eWzD4VoILNfodzTHdCIMKX/k47LcM3hmpTfFhAR7Cj0=" crossorigin="anonymous"></script>
+
+<!-- Create script here -->
+<script type='text/javascript'>
+	// initialize Globally Scoped Variables
+	// define max and min values for guessing
+	// if you were cool, you'd put those in a mustache so the directions would contain these values instead of having to change them manually
+	var MAX = 100;
+	var MIN = 1;
+	var guessArray = [];
+
+	var correctAnswer = 0;
+	var myGuess = 0;
+	var startGame;
+	var playGame;
+
+	// variables to draw the circle
+	var tooLowArray = [];
+	var tooHighArray = [];
+	var tooLowArrayMax = 0;
+	var tooHighArrayMin = 0;
+	var arrayLength;
+	var tooLow = '';
+	var zero = -(Math.PI /2);
+
+	// variable to capture modified date of file
+	var fileModifiedDate = '';
+
+	// variables for Mustache templates
+	var tplStringLow = null;
+	var tplStringHigh = null;
+	var tplStringCorrect = null;
+	var outputLow = null;
+	var outputHigh = null;
+	var outputCorrect = null;
+
+	// function to sweep red around to eliminate values
+	drawRangeCircle = function() {
+		$('#rangeCircle').circleProgress({
+			startAngle: circleStartAngle,
+			reverse: 'false', // fill counterclockwise
+			value: circleValue,
+			size: 200,
+			thickness: 100,
+			fill: {
+				gradient: ["red"]
+			},
+			emptyFill: 'green'
+		});
+	};
+	// redraw rangeCircle with no red
+	resetRangeCircle = function(){
+		circleStartAngle = zero;
+		circleValue = 0;
+		drawRangeCircle();
+	}
+
+	const $myModal = $('#myModal');
+	// Add click handlers to buttons
+	$('#startBtn').click(function(){
+		// alert("Available Height: " + screen.availHeight);
+		playGame();
+		this.form.reset(); // erases the number in the form
+		if(screen.availHeight > 1000){ // https://help.optimizely.com/Build_Campaigns_and_Experiments/Use_screen_measurements_to_design_for_responsive_breakpoints
+			$('#myGuess').focus(); // puts cursor back in the form only for big screens
+		}
+	});
+	$('#resetBtn').click(function() {
+		console.log('you clicked reset');
+			guessArray = [];
+			tooLowArray = [];
+			tooHighArray = [];
+			$('#guesses').empty();
+			resetRangeCircle();
+			startGame();
+		});
+	// end click handlers
+
+	// functions
+	playGame = function(){
+		// Store input value in a variable and in an array. need it in an array so we can find the array length to tell the player how many guesses they made before they succeeded
+		// Store raw guess for use in the error message & get value of raw guess
+		const rawGuess = $('#myGuess').val();
+		// Convert rawGuess to a number if possible
+		const myGuess = Number($('#myGuess').val());
+		console.log('myGuess was ' + myGuess);
+
+		if (is.not.integer(myGuess) || is.not.within(myGuess,MIN-1,MAX+1)){
+			alert('I said an integer from ' + MIN + '-' + MAX + ' you chowderhead.')
+		} else { // if a valid guess, get to work
+			// pushguess into appropriate array
+			guessArray.push(myGuess);
+		if (myGuess < correctAnswer){
+			tooLow = true;
+			tooLowArray.push(myGuess); // array of values that are too low
+		} else if (myGuess > correctAnswer){
+			tooLow = false;
+			tooHighArray.push(myGuess) // array of values that are too high
+		};
+		// puts highest low value and lowest high value into variables to draw the range eliminated
+		tooLowArrayMax = Math.max(...tooLowArray);
+		tooHighArrayMin = Math.min(...tooHighArray);
+		// Populate the guesses box
+		if (myGuess == correctAnswer){
+			$('#guesses').append(outputCorrect);
+			// draw the modal only if they win
+			$myModal.modal('show');
+			$('#dismissBtn').click(function(){
+				$('#myGuess').focus();
+			});
+		} else if (tooLow === true){
+			if(myGuess < tooLowArrayMax){
+				$('#guesses').append('I already told you ' + tooLowArrayMax + ' was too low, why did you guess lower?</br>');
+			} else {
+				$('#guesses').append(tooLowArrayMax + outputLow);
+			}
+		} else if (tooLow === false){
+			if(myGuess > tooHighArrayMin){
+				$('#guesses').append('I already told you ' + tooHighArrayMin + ' was too high, why did you guess higher?</br>');
+			} else { // guess is too high
+				$('#guesses').append(tooHighArrayMin + outputHigh);
+			}
+		}
+			// Populate the modal with the correct wording
+		if (correctAnswer == myGuess && guessArray.length === 1){
+			// edit modals
+			$('.modal-body', $myModal).text('You guessed ' + myGuess + ', and the correct answer is ' + correctAnswer + ' so you win! It took you ' + guessArray.length + ' guess.');
+			$('#dismissBtn', $myModal).addClass('btn btn-success');
+		} else if (correctAnswer == myGuess) {
+			$('.modal-body', $myModal).text('You guessed ' + myGuess + ', and the correct answer is ' + correctAnswer + ' so you win! It took you ' + guessArray.length + ' guesses.');
+			$('#dismissBtn', $myModal).addClass('btn btn-success');
+		}
+	// console.log('tooLowArrayMax = ' + tooLowArrayMax + ' and tooHighArrayMin = ' + tooHighArrayMin);
+
+		if (correctAnswer == myGuess){ // myGuess = correctAnswer
+			// console.log('I got to if 0');
+			circleStartAngle = zero;
+			circleValue = 1;
+		}
+		else if (tooLow === true && tooHighArray.length == 0){ // only one value but we know it's tooLow
+		// draw arc from zero to low value
+			// console.log('I got to if 1');
+				circleStartAngle = zero + (tooLowArrayMax * 2 * Math.PI)/100; // top plus arrayMin clockwise
+				circleValue = tooLowArrayMax/100;
+
+		} else if (tooLow === true && tooHighArray.length !== 0){ // more than one value
+			// draw arc from
+		// console.log('I got to if 2');
+			circleStartAngle = zero + (tooLowArrayMax * 2 * Math.PI)/100;
+			circleValue = (tooLowArrayMax + (100-tooHighArrayMin))/100;
+			circleReverse = 'false';
+
+		} else if(tooLow === false && tooLowArray.length == 0)	{ // tooLow is false, aka too high, only one value but we know it's too high
+		// console.log('I got to if 3');
+			circleStartAngle = zero;
+			console.log('tooLow = ' + tooLow + ' circleStartAngle is ' + circleStartAngle);
+			circleValue = 1 - tooHighArrayMin/100;
+
+		} else if (tooLow === false && tooLowArray.length !== 0) { // more than one value - assumes they didn't pick a 2nd high value right away like a moron
+			// console.log('I got to if 4');
+			circleStartAngle = zero + (tooLowArrayMax * 2 * Math.PI)/100;
+			circleValue = (tooLowArrayMax + (100-tooHighArrayMin))/100;
+			circleReverse = 'false';
+		};
+		// Draw the rangeCircle
+		drawRangeCircle();
+	}
+		// end else and show modal
+	}; // end playGame
+
+// Document ready handler
+	$(function(){
+
+		// Get file modified date
+		// from https://stackoverflow.com/questions/23804139/last-modified-date-of-local-file-javascript
+		// and https://stackoverflow.com/questions/1557602/jquery-and-ajax-response-header
+
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: 'https://podfeet.com/misc/shallWePlayAGame/index.html',
+		// 	success: function(data, textStatus, request){
+		// 		fileModifiedDate = request.getResponseHeader('Last-Modified');
+		// 		// alert('Last Modfied Date is ' + fileModifiedDate)
+		// 		$('#date-time').text(fileModifiedDate);
+		// 	}
+		// });
+
+		// Game Play
+		var chainedPromise = null;
+
+		startGame = function() {
+			// time for some AJAX! Get the random number from Bart's random number generator
+			const myAjaxRequest = $.ajax({
+				url: 'https://bartbusschots.ie/utils/fakerWS/numberBetween/1/',
+				method: 'GET',
+				cache: true,  // allows playGame inside AJAX but holds answer still
+				data: {
+					arg1: MIN,
+					arg2: MAX
+				}
+			}).then(
+				function(randomNumber){ // resolved callback
+					// if it's resolved and not rejected but failed
+					if (!(randomNumber)){
+						console.log('RESOLVED: failed to retrieve random number, setting to default of 42')
+						return 42;
+					}
+					// on success return random number
+					console.log(`Yay! 🙂 The randomNumber resolved to the value:\n${randomNumber}`);
+					correctAnswer = randomNumber;
+					console.log('correct answer is ' + correctAnswer);
+					return randomNumber;
+				},
+				function(err){ // rejected callback
+					console.log('REJECTED: failed to retrieve random number, setting to default of 42')
+					return 42;
+				}
+			);
+		};
+		// Define the view
+    const responseView = {
+      correct: 'Your guess is JUST right!    ~ Goldilocks',
+      low: ' is too low.',
+      high: ' is too high.'
+		}
+    // Import the templates for the low, high and correct HTML
+    const tplPromiseLow = $.ajax({
+      url: './templates/stringLow.txt',
+      method: 'GET',
+      cache: false
+    })
+    const tplPromiseHigh = $.ajax({
+      url: './templates/stringHigh.txt',
+      method: 'GET',
+      cache: false
+    })
+    const tplPromiseCorrect = $.ajax({
+      url: './templates/stringCorrect.txt',
+      method: 'GET',
+      cache: false
+    });
+    // Use Promise.all to create a function that will execute when all Promises resolve
+    tplStringLow ='';
+    tplStringHigh = '';
+    tplStringCorrect = '';
+    const allTplPromises = Promise.all([tplPromiseLow,tplPromiseHigh,tplPromiseCorrect]);
+    allTplPromises.then(
+      function(xArray){
+        console.log(xArray[0]);
+        
+        tplStringLow = xArray[0];
+        tplStringHigh = xArray[1];
+        tplStringCorrect = xArray[2];
+
+        // render the template with the view
+        outputLow = Mustache.render(tplStringLow, responseView);
+        outputHigh = Mustache.render(tplStringHigh, responseView);
+        outputCorrect = Mustache.render(tplStringCorrect, responseView);
+      });
+	
+		// Actually start the game
+		startGame();
+	}); // end document ready handler
+</script>
+</body>
+</html>

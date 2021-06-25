@@ -19,6 +19,7 @@ Set at the end of [instalment 42](https://bartificer.net/pbs42) with sample solu
 The final vesion of this challenge was set at the start of [instalment 82](https://bartificer.net/pbs82) with sample solution described in [instalment 83](https://bartificer.net/pbs83).
 
 * [Solution from Bart Busschots](pbs82-guessing-game/bbusschots/) (contributed as a worked example in [instalment 119](https://bartificer.net/pbs119)).
+* [Solution from Allison Sheridan](https://nosillacast.github.io/pbs-gallery/pbs82-guessing-game/nosillacast) People actually play my game!
 
 ## Currency Converter
 
@@ -42,4 +43,4 @@ Set at the end of [instalment 92](https://bartificer.net/pbs92) with sample solu
 
 Set at the end of [instalment 96](https://bartificer.net/pbs96) with sample solutions described in [instalment 100](https://bartificer.net/pbs100).
 
-* *no entries added yet*
+*[Solution from Allison Sheridan](https://nosillacast.github.io/pbs-gallery/pbs96-time-sharing/nosillacast) V1 of my time-shifter clock.  V2 will allow you to add additional cities.
