@@ -12,13 +12,13 @@ This is a gallery of listener-submitted solutions to some of the challenges set 
 
 Set at the end of [instalment 42](https://bartificer.net/pbs42) with sample solution described in [instalment 43](https://bartificer.net/pbs43).
 
-* [Solution from Bart Busschots](pbs42-game-of-life/bbusschots/) (contributed as a worked example in [instalment 119](https://bartificer.net/pbs119)).
+* [Solution from Bart Busschots](pbs42-game-of-life/bbusschots/).
 
 ## Number Guessing Game
 
 The final vesion of this challenge was set at the start of [instalment 82](https://bartificer.net/pbs82) with sample solution described in [instalment 83](https://bartificer.net/pbs83).
 
-* *no entries added yet*
+* [Solution from Bart Busschots](pbs82-guessing-game/bbusschots/) (contributed as a worked example in [instalment 119](https://bartificer.net/pbs119)).
 
 ## Currency Converter
 
