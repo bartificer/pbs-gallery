@@ -14,7 +14,7 @@ Your code needs to abide by the following conditions before it will be merged:
 
 1. All code must be entirely HTML, JavaScript & CSS-based.
 2. Only submit your own code.
-3. Any third party libraries must be linked from a CDN rather than included submission.
+3. Any third party libraries should be linked from a CDN rather than included in the submission.
 4. Your pull request must not contain edits to any files previously existing in the repository — only add your code, don't edit anyone else's!
 
 By submitting you are agreeing to the following:
@@ -23,4 +23,10 @@ By submitting you are agreeing to the following:
 
 ## How to Submit?
 
-Submit your solution for inclusion in the gallery by forking [the official copy of this repository](https://github.com/bartificer/pbs-gallery), adding your solution (within a folder), and submitting a pull request. Your code will be moved to an appropriately named folder within the pull request, and then merged.
+You can submit your code via GitHub by:
+
+1. Forking [the official copy of this repository](https://github.com/bartificer/pbs-gallery).
+2. Adding your solution to a folder named for your GitHub username within the appriate sub-folder in th `docs` folder.
+3. Submitting a pull request.
+
+For a more detailed description of this process, see [instalment 119](https://bartificer.net/pbs119).
