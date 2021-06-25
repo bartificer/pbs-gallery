@@ -1,6 +1,6 @@
 # About
 
-This is a gallery of listener-submitted solutions to some of the challenges set in the [Programming by Stealth](https://pbs.bartificer.net)) blog/podcast series by [Bart Busschots](https://bartb.ie/) of [Bartificer Creations](https://bartificer.net/) and Allison Sheridan of the [NosillaCast Podcast](https://podfeet.com).
+This is a gallery of listener-submitted solutions to some of the challenges set in the [Programming by Stealth](https://pbs.bartificer.net) blog/podcast series by [Bart Busschots](https://bartb.ie/) of [Bartificer Creations](https://bartificer.net/) and Allison Sheridan of the [NosillaCast Podcast](https://podfeet.com).
 
 # The Gallery
 
