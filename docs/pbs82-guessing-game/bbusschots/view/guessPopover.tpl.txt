@@ -1,0 +1,4 @@
+<span class="text-warning">
+	<i class="{{{icon}}} d-inline-block mr-1"></i>
+	{{message}}
+</span>

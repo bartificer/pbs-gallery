@@ -1,0 +1,569 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>PBS 82 — Guessing Game</title>
+	
+	<!-- Import the Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	
+	<!-- Import Free Font Awesome 5 Glyphicons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+<body>
+	
+	<!-- A the Modal dialogue -->
+	<div class="modal" tabindex="-1" role="dialog" id="theModal" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content"></div>
+		</div>
+	</div>
+	
+	<!-- The page content -->
+	<div class="container mt-3 mb-3">
+		<div class="row">
+			<main class="col-12 col-lg-8">
+				<div class="container">
+					<div class="row">
+						<div class="col-12">
+							<nav class="navbar navbar-dark bg-dark rounded">
+								<span class="navbar-brand">
+									<img src="PBS-Logo.svg" alt="PBS Logo" class="bg-white p-1 rounded mr-2" style="width: 2em">
+									<span class="h3">Guessing Game</span>
+								</span>
+								<span class="navbar-text mr-auto">PBS 82 Challenge</span>
+								<form class="form-inline">
+									<button type="button" class="btn btn-danger" id="quitBtn">I Give Up!</button>
+								</form>
+							</nav>
+						</div>
+					</div>
+					<div class="row mt-2">
+						<!-- The container for the main game interface -->
+						<div class="col-12" id="mainGameInterface">
+							<div class="d-flex justify-content-center text-muted">
+								<div class="spinner-border m-5" role="status">
+									<span class="sr-only">Loading...</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			<aside class="col">
+				<div class="card bg-light">
+					<h1 class="card-header h4 bg-info text-white">
+						<i class="fas fa-info-circle d-inline-block mr-1"></i>
+						About
+					</h1>
+					<div class="card-body">
+						<p class="card-text lead">This is Bart's sample solution for the challenge set at the end of <a href="https://www.bartbusschots.ie/s/2019/09/21/pbs-82-of-x-async-await/" target="_blank" rel="noopener">instalment 82</a> of the <a href="https://bartb.ie/pbs" target="_blank" rel="noopener">Programming by Stealth series</a>.</p>
+						<p class="card-text">This version of the game has been designed to illustrate the <i>binary search</i> algorithm.</p>
+						<h2 class="card-title h5">Resources</h2>
+						<ul>
+							<li>The binary search algorithm — <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm" target="_blank">en.wikipedia.org/…</a></li>
+							<li>A video tutorial about binary search — <a href="https://www.youtube.com/watch?v=P3YID7liBug" target="_blank">www.youtube.com/…</a></li>
+						</ul>
+					</div>
+				</div>
+			</aside>
+		</div>
+	</div>
+	
+	<!-- Import the is.js micro checking library -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/is_js/0.9.0/is.min.js" integrity="sha256-lnJeulOa3e5IO2EzHr8jKJ3CbT80MBwkS5a+n2ooIr4=" crossorigin="anonymous"></script>
+
+	<!-- Import the full jQuery (slim does not contain AJAX) -->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	
+	<!-- Import the Bootstrap JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
+	<!-- Import the Mustache templating engine -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js" integrity="sha256-srhz/t0GOrmVGZryG24MVDyFDYZpvUH2+dnJ8FbpGi0=" crossorigin="anonymous"></script>
+	
+	<!-- Custom JS Code -->
+	<script type="text/javascript">
+		// Globally Scoped Variables
+		const BUTTONS_PER_GROUP = 5; // the number of buttons per button group in the game UI
+		const NUM_BUTTON_GROUPS = 20; // the number of button groups in the game UI
+		const MIN = 1; // the lowest allowed random number
+		const MAX = MIN + (BUTTONS_PER_GROUP * NUM_BUTTON_GROUPS) - 1;
+		var GAME_ON = false; // a flag to record whether or not a game is in progress
+		var RANDOM_NUMBER = 0; // the random number to be guessed, set when the game initialised
+		var GUESSES = []; // an array to store the guesses
+		var MIN_POSSIBLE_GUESS = MIN; // the minimum possible value based on guesses to date
+		var MAX_POSSIBLE_GUESS = MAX; // the maximum possible value based on guesses to date
+		var SPINNER_HTML = ''; // will be extracted from the markup by document ready handler
+		var $GAME_MESSAGE_CONTAINER = null; // the container for any messages displayed by the game, set by resetGameUI()
+		var $MODAL = null; // the pre-created modal dialogue, set in the document ready handler
+		var $MODAL_CONTENT = null; // the modal-content div within the pre-created modal dialogue, set in the document ready handler
+		var $GAME_INTERFACE = null; // the container for the game's primary interface, set in the document ready handler
+		var $GUESS_BUTTONS = null; // a jQuery object representing all the guess buttons, set by resetGameUI()
+		var $GUESS_BUTTONS_BY_NUMBER = {}; // a lookup table for the guess buttons by the number they represent, set by resetGameUI()
+		var $GUESSES_DISPLAY = null; // the container for the display of the current guesses, set by resetGameUI()
+		var GUESS_POPOVER_DURATION = 1; // the number of seconds the guess popovers will remain visible
+		var TEMPLATES = { // Mustache template strings, loaded from external files via AJAX by document ready handler
+			gameMessage: '',
+			guesses: '',
+			guessPopover: '',
+			gameWon: '',
+			gameGrid: '',
+			// error is hard-coded rather than loaded in case there is an error loading the templates!
+			gameInitError: '<div class="alert alert-danger" role="alert"><h2 class="h4 alert-heading">Error</h4><p>Failed to initialise game 🙁</p></div>',
+			confirmQuit: ''
+		};
+		var ICONS = { // Font Awesome 5 Icon classes
+			info: 'fas fa-info-circle',
+			error: 'fas fa-exclamation-triangle',
+			notice: 'fas fa-exclamation-circle', 
+			tooLow: 'fas fa-arrow-alt-circle-up',
+			tooHigh: 'fas fa-arrow-alt-circle-down'
+		};
+		
+		// The Document Ready Handler
+		$(async function(){
+			// get and store the needed page elements
+			$GAME_MESSAGES = $('#gameMessageContainer');
+			$MODAL = $('#theModal');
+			$MODAL_CONTENT = $('.modal-content', $MODAL);
+			$GAME_INTERFACE = $('#mainGameInterface');
+			
+			// save the spinner HTML for later re-use
+			SPINNER_HTML = $GAME_INTERFACE.html();
+			
+			// add a click handler to the quit button
+			$('#quitBtn').click(function(){
+				quitGame();
+			});
+			
+			// load the templates
+			try{
+				await loadTemplates('gameMessage', 'guesses', 'guessPopover', 'gameWon', 'gameGrid', 'confirmQuit');
+			}catch(err){
+				$GAME_INTERFACE.empty().html(Mustache.render(
+					TEMPLATES.gameInitError
+				));
+				console.log('failed to load templates with error', err);
+			}
+			
+			// reset the game
+			resetGame();
+		});
+		
+		// template loading functions
+		
+		/**
+		 * Load the reqested templates into the TEMPLATES global variable.
+		 *
+		 * Each template will be loaded from a file with the same name as the template in the view folder with the file extension .tpl.txt.
+		 *
+		 * @param {...string} templateNames
+		 * @return {Promise} Returns a promise that resolves when all the templates have been loaded.
+		 * @throws {TypeError} A Type Error is thrown on invalid args.
+		 */
+		async function loadTemplates(...templateNames){
+			if(is.empty(templateNames) || !is.all.string(templateNames)){
+				throw new TypeError('must pass one or more template names as strings');
+			}
+			const templatePromises = [];
+			for(const tplName of templateNames){
+				const tplURL = `./view/${encodeURIComponent(tplName)}.tpl.txt`;
+				const tplPromise = $.ajax({
+					url: tplURL,
+					method: 'GET',
+					dataType: 'text'
+				}).then(function(tpl){
+					// store the template
+					TEMPLATES[tplName] = tpl;
+					return tpl; // pass the template through
+				});
+				templatePromises.push(tplPromise);
+			}
+			return Promise.all(templatePromises);
+		}
+		
+		// game control functions
+		
+		/**
+		 * Reset the game.
+		 */
+		function resetGame(){
+			// set the game on flag to false
+			GAME_ON = false;
+			
+			// blank and hide the modal
+			$MODAL.modal('hide');
+			$MODAL_CONTENT.empty();
+			
+			// set the game UI to the loading spinner & empty $GAME_MESSAGE_CONTAINER & $GUESSES_DISPLAY
+			$GAME_INTERFACE.html(SPINNER_HTML);
+			$GAME_MESSAGE_CONTAINER = null;
+			$GUESSES_DISPLAY = null;
+			
+			// switch to async for the remainder of the function
+			(async ()=>{
+				try{
+					// get the random number
+					RANDOM_NUMBER = await $.ajax({
+						url: 'https://bartbusschots.ie/utils/fakerWS/numberBetween/1/text',
+						data: {
+							arg1: MIN,
+							arg2: MAX
+						},
+						method: 'GET',
+						cache: false,
+						dataType: 'text'
+					});
+					
+					// blank the guesses
+					GUESSES = [];
+					MIN_POSSIBLE_GUESS = MIN;
+					MAX_POSSIBLE_GUESS = MAX;
+									
+					// reset the game UI
+					resetGameUI();
+									
+					// game on!
+					GAME_ON = true;
+				}catch(err){
+					$GAME_INTERFACE.empty().html(Mustache.render(
+						TEMPLATES.gameInitError
+					));
+					console.log('random number error', err);
+				}
+			})();
+		}
+		
+		/**
+		 * Make a guess.
+		 * 
+		 * @param {number} num - The guessed number
+		 */
+		function guessNumber(num){
+			// if there is no game on, silently return
+			if(!GAME_ON) return;
+			
+			// validate the guess
+			if(is.not.integer(num) && is.not.within(num, MIN, MAX)){
+				showGameMessage('Invalid Guess', ICONS.error, 'danger');
+				return;
+			}
+			
+			//short-circuit guesses that are impossible
+			if(num < MIN_POSSIBLE_GUESS || num > MAX_POSSIBLE_GUESS){
+				showGameMessage(
+					`Impossible Guess, ${num} was ruled out by previous guesses`,
+					ICONS.notice,
+					'danger'
+				);
+				return;
+			}
+			
+			// check the guess
+			if(num == RANDOM_NUMBER){
+				// correct!
+				
+				// end the game
+				GAME_ON = false;
+				
+				// do the binary search
+				const binSearchGuesses = binarySearch();
+				
+				// show the game over modal
+				showModalGameMessage(
+					TEMPLATES.gameWon,
+					{
+						guesses: GUESSES,
+						guessCount: {
+							incorrect: GUESSES.length,
+							total: GUESSES.length + 1
+						},
+						randomNumber: RANDOM_NUMBER,
+						binarySearch: {
+							guesses: binSearchGuesses.slice(0, -1),
+							guessCount: {
+								incorrect: binSearchGuesses.length -1,
+								total: binSearchGuesses.length
+							}
+						}
+					},
+					function ($mc) {
+						$('button', $mc).click(function(){
+							resetGame();
+						});
+					}
+				);
+			}else{
+				// wrong
+				
+				// store the guess and update the guesses dispaly
+				GUESSES.push(num);
+				$GUESSES_DISPLAY.html(Mustache.render(
+					TEMPLATES.guesses,
+					{
+						guesses: GUESSES
+					}
+				));
+				
+				// figure out what direction we're wrong
+				const tooLow = num < RANDOM_NUMBER ? true : false;
+				
+				// update the lowest/highest possible guesses
+				const prevMinPos = MIN_POSSIBLE_GUESS;
+				const prevMaxPos = MAX_POSSIBLE_GUESS;
+				if(tooLow){
+					if(num > MIN_POSSIBLE_GUESS){
+						MIN_POSSIBLE_GUESS = num + 1;
+					}
+				}else{
+					if(num < MAX_POSSIBLE_GUESS){
+						MAX_POSSIBLE_GUESS = num - 1;
+					}
+				}
+				
+				// disable any buttons that have become impossible
+				for(let n = prevMinPos; n < MIN_POSSIBLE_GUESS; n++){
+					$GUESS_BUTTONS_BY_NUMBER[n].prop('disabled', true);
+				}
+				for(let n = prevMaxPos; n > MAX_POSSIBLE_GUESS; n--){
+					$GUESS_BUTTONS_BY_NUMBER[n].prop('disabled', true);
+				}
+				
+				// tell the player the bad news!
+				showGameMessage(
+					`${tooLow ? 'Higher' : 'Lower'}! ${num} is too ${tooLow ? 'low' : 'high'}`,
+					tooLow? ICONS.tooLow : ICONS.tooHigh,
+					'warning'
+				);
+				const $guessBtn = $GUESS_BUTTONS_BY_NUMBER[num];
+				$guessBtn.popover('show');
+				window.setTimeout(
+					function(){
+						$guessBtn.popover('hide');
+					},
+					GUESS_POPOVER_DURATION * 1000
+				);
+				
+				// mark the number as guessed on the grid
+				$guessBtn.removeClass('btn-secondary').addClass('btn-danger').prop('disabled', true);
+			}
+		}
+		
+		/**
+		 * Quit the game.
+		 */
+		function quitGame(){
+			// if there's no game on, do nothing
+			if(!GAME_ON) return;
+			
+			// render a confirmation modal
+			showModalGameMessage(
+				TEMPLATES.confirmQuit,
+				{
+					guesses: GUESSES
+				},
+				function($mc, $m){
+					// add an event handler to the cancel button
+					$('.cancelBtn', $mc).click(function(){
+						$m.modal('hide');
+					});
+					
+					// add an event handler to the OK button
+					$('.okBtn', $mc).click(function(){
+						resetGame();
+					});
+				}
+			);
+		}
+		
+		/**
+		 * Perform a binary search for the random number.
+		 * 
+		 * @return {number[]} Returns an array with all the guesses up to and including the successful one.
+		 */
+		function binarySearch(){
+			const guesses = [];
+			
+			// start the range of possible guesses at the extremes of the grid
+			let min = MIN;
+			let max = MAX;
+			
+			// guess the half way point until the answer is found
+			let g;
+			do{
+				// guess the half way point and save
+				g = Math.round((min + max) / 2);
+				guesses.push(g);
+				
+				// update min or max as appropriate
+				if(g < RANDOM_NUMBER) min = g + 1;
+				if(g > RANDOM_NUMBER) max = g - 1;
+			}while(g != RANDOM_NUMBER);
+			
+			// return all the guesses
+			return guesses;
+		}
+		
+		// utility functions
+		
+		/**
+		 * Show a game-related message.
+		 *
+		 * @param {string} message - The message itself.
+		 * @param {string} [icon='fas fa-info-circle'] - The CSS classes for an optional Font Awesome 5 glyphicon.
+		 * @param {string} [context='info'] - Bootstrap context to use for the message.
+		 */
+		function showGameMessage(message, icon, context){
+			// force the arguments to be valid, even if they're garbage
+			const m = is.existy(message) && is.not.empty(message) ? String(message) : '';
+			const i = is.string(icon) && is.not.empty(icon) ? icon : 'fas fa-info-circle';
+			const c = is.string(context) && is.not.empty(context) ? context : 'info';
+			
+			// render the message
+			$GAME_MESSAGE_CONTAINER.html(Mustache.render(
+				TEMPLATES.gameMessage,
+				{
+					message: m,
+					icon: i,
+					context: c
+				}
+			));
+		}
+		
+		/**
+		 * Show a game-related modal message.
+		 * 
+		 * @param {string} modalTemplate - A Bootstrap template string for generating the content of the modal's .modal-content div.
+		 * @param {object} [viewObj={}] - Opional view data for rendering the template.
+		 * @param {function} [initCallback] - An optional callback to initialise any event handlers related to the content of the modal. The callback will be executed after the content has been injected into the modal, but before it is shown. When executed, the callback will be passed a jQuery object representing the modal's .modal-content div as the first argument, and a jQuery object representing the entire modal as the second.
+		 */
+		function showModalGameMessage(modalTemplate, viewObject, initCallback){
+			// force the arguments to be valid, even if they're garbage
+			const t = is.string(modalTemplate) && is.not.empty(modalTemplate) ? modalTemplate : '???';
+			const v = is.object(viewObject) ? viewObject : {};
+			const cb = is.function(initCallback) ? initCallback : null;
+			
+			// hide the modal
+			$MODAL.modal('hide');
+			
+			// try render the template
+			let c = '';
+			try{
+				c = Mustache.render(t, v);
+			}catch(err){
+				c = '<div class="modal-body"><p class="danger">Template Error</p></div><div class="modal-footer"><button type="button" class="btn btn-primary okBtn">OK</button></div>';
+				cb = function($mc, $m){
+					$('button', $mc).click(function(){
+						$m.modal('hide');}
+					);
+				}
+			}
+			
+			// inject the content
+			$MODAL_CONTENT.html(c);
+			
+			// execute the initialisation callback, if one exists
+			if(cb) cb($MODAL_CONTENT, $MODAL);
+			
+			// show the modal 
+			$MODAL.modal('show');
+		}
+		
+		/**
+		 * Attach a manually triggered Bootstrap popover to a given element.
+		 *
+		 * @param {jQuery} $elememt - A jQuery object representing the element
+		 * to which the popover should be attached.
+		 * @param {string} title - The title text for the popover.
+		 * @param {string} bodyTemplate - A Mustache template string for producing the HTML for the popover body.
+		 * @param {object} [bodyView={}] - An optional view object to use when rendering the bodyTemplate
+		 */
+		function attachPopover($element, title, bodyTemplate, bodyView){
+			// force the arguments to be valid, even if they're garbage
+			const $e = $element instanceof jQuery ? $element : $();
+			const t = is.string(title) && is.not.empty(title) ? title : '???';
+			const bt = is.string(bodyTemplate) && is.not.empty(bodyTemplate) ? bodyTemplate : '???';
+			const bv = is.object(bodyView) ? bodyView : {};
+			
+			// try render the template
+			let bodyHTML = '';
+			try{
+				bodyHTML = Mustache.render(bt, bv);
+			}catch(err){
+				bodyHTML = '<p class="text-danger">Template Error</p>'
+			}
+			
+			// initialise the popover plugin on the element
+			$e.popover({
+				trigger: 'manual',
+				placement: 'bottom',
+				sanitize: false,
+				html: true,
+				title: '', // make sure the popover has no title
+				content: bodyHTML
+			});
+		}
+		
+		/**
+		 * Reset the game UI.
+		 */
+		function resetGameUI(){
+			// build the view object needed to render the grid
+			const gridView = {
+				groups: []
+			};
+			let currentValue = MIN;
+			for(let i = 1; i <= NUM_BUTTON_GROUPS; i++){
+				const group = {
+					values: [] 
+				};
+				for(let j = 1; j <= BUTTONS_PER_GROUP; j++){
+					group.values.push(currentValue);
+					currentValue++;
+				}
+				gridView.groups.push(group);
+			}
+			
+			// render the grid of buttons
+			$GAME_INTERFACE.empty().html(Mustache.render(
+				TEMPLATES.gameGrid,
+				gridView
+			));
+			
+			// save references to areas of the UI
+			$GAME_MESSAGE_CONTAINER = $('#gameMessageArea');
+			$GUESSES_DISPLAY = $('#guessesDisplay');
+			$GUESS_BUTTONS = $('button.guess', $GAME_INTERFACE);
+			$GUESS_BUTTONS_BY_NUMBER = {};
+			$GUESS_BUTTONS.each(function(){
+				const $btn = $(this);
+				$GUESS_BUTTONS_BY_NUMBER[$btn.val()] = $btn;
+			});
+			
+			// set the click handler on all grid buttons
+			$GUESS_BUTTONS.click(function(){
+				guessNumber(parseInt($(this).val()));
+			});
+			
+			// attach a popover to each incorrect guess
+			$GUESS_BUTTONS.each(function(){
+				const $btn = $(this);
+				const guess = parseInt($btn.val());
+				
+				// skip the button for the correct guess
+				if(guess == RANDOM_NUMBER) return;
+				
+				// attach the popover
+				const tooLow = guess < RANDOM_NUMBER;
+				attachPopover($btn, '', TEMPLATES.guessPopover, {
+					message: `${tooLow ? 'Higher' : 'Lower'}!`,
+					icon: tooLow ? ICONS.tooLow : ICONS.tooHigh
+				});
+			});
+		}
+	</script>
+</body>
+</html>
