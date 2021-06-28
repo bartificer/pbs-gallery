@@ -25,7 +25,7 @@ The final vesion of this challenge was set at the start of [instalment 82](https
 
 Set at the end of [instalment 88](https://bartificer.net/pbs88) with sample solution described in [instalment 89](https://bartificer.net/pbs89).
 
-> **Note** that the currency converter API used in these instalments has changed their TOS and their API. They now require an account be created and a security token passed to each AJAX call. They also rate-limit the use of the API, and free accounts can't use some previously available functionality. You will almost certainly need to update your code before submitting it to the gallery.
+> Note that the currency converter API used in these instalments has changed their TOS and their API. They now require an account be created and a security token passed to each AJAX call. They also rate-limit the use of the API, and free accounts can't use some previously available functionality. You will almost certainly need to update your code before submitting it to the gallery.
 {: .aside}
 
 * *no entries added yet*
@@ -34,7 +34,7 @@ Set at the end of [instalment 88](https://bartificer.net/pbs88) with sample solu
 
 Set at the end of [instalment 89](https://bartificer.net/pbs89) with sample solution described in [instalment 92](https://bartificer.net/pbs92).
 
-> **Note** that the note above for the currency converter applie here too.
+> The note for the currency converter applies here too 🙁
 {: .aside}
 
 * *no entries added yet*
