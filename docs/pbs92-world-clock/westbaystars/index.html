@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>World Clock</title>
+
+	<!-- Include Bootstrap 4 CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"/>
+
+  <!-- Include CSS for the world timezone map -->
+  <link rel="stylesheet" href="timezone-map.css" />
+    
+  <style>
+    .text-success svg { fill: #28a745; }
+  </style>
+  <!-- Make moment and moment-timezone available -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data-1970-2030.js" integrity="sha512-em60km3Olu0GWvK2C3BndCQAYhHyv637yD2PBdR1pAZnmIqjBy0nzKOu64Qx7Q9yesAlFRwvP4GK0gP9jIvM2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+	<!-- Other libraries for Timezone Map to work -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.8/topojson.min.js" integrity="sha512-43E3KY1rXjcwTofseWD83RjhB++wL/CVp9Y4V+CfpFrLel+iXMQd9fe/7/jHi5eL8f8WqxgEb3zdqnxyCntRxA==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js" integrity="sha512-+ruHlyki4CepPr07VklkX/KM5NXdD16K1xVwSva5VqOVbsotyCQVKEwdQ1tAeo3UkHCXfSMtKU/mZpKjYqkxZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js" integrity="sha512-RJJ1NNC88QhN7dwpCY8rm/6OxI+YdQP48DrLGe/eSAd+n+s1PXwQkkpzzAgoJe4cZFW2GALQoxox61gSY2yQfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-array/1.2.2/d3-array.min.js" integrity="sha512-a/E42YlriWlH6BqS4HXIXSx/tNTdC9NAKnGayXm0yac310St9QXhgtMQTPd9Ve48M3GEc234+qxZY3W/8v6cOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo/1.9.1/d3-geo.min.js" integrity="sha512-pTD2FfcWL8i1I95iiEFbvNnnQ89lljmlevI0OJIo11WSj+lW23P8RR+c/36v6/vL1ILD+cHYzFJK4y6ZaKGcpw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/gh/sebt3/d3-bootstrap@0.5.2/dist/d3-bootstrap-withextra.min.js"></script>
+  
+	<!-- Other libraries for Timezone Map to work -->
+  <script src="night.js"></script>
+  <script src="colorbrewer.js"></script>
+  <script src="awesomplete.min.js"></script>        <!-- No longer available from CDN -->
+  <!--script src="d3-bootstrap.js"></script-->           <!-- CDN version doesn't work anymore -->
+
+  <!-- Local libraries for this web app -->
+  <script src="digital-clock.js"></script>
+	<script src="analog-clock.js"></script>
+  <script src="timezone-map.js"></script>
+</head>
+<body>
+	<main class="container-fluid mt-3">
+	  <div class="row" id="container">
+	    <!--
+			<div class="col-12 col-lg-8 col-xl-9 mb-3">
+				<div class="card" style="width: 18rem;">
+			    <div class="card-body">
+			      <h5>World Clock</h5>
+			      <! This is where we're going to insert the clock for this card via D3. >
+			      <div class="clock"></div>
+			    </div>
+			  </div>
+			</div>
+			-->
+	    <div class="col-12 col-sm 6 col-md-4 col-lg-3 col-xl-2 mb-3 order-lg-first">
+				<div class="row" id="settings">
+					<div class="col-12">
+						<div class="card border-success bg-light" aria-describedby="wc-settings">
+							<h2 id="wc-settings" class="card-header h4 text-success border-success">World Clock Settings</h2>
+							<div class="card-body">
+								<form class="form" action="javascript:void(0);" id="settingsForm">
+								<!--
+								  Allow the user to control the following:
+										The timezone the clock shows the current time in.
+										Whether or not the clock shows 12 hour time or 24 hours time.
+										Whether or not the clock shows seconds.
+										Whether or not the clock shows pulsing dividers between the parts of the time.
+								-->
+									<div class="form-group">
+										<input type="checkbox" value="show24Hour" id="show24Hour" aria-label="Show time in 12 or 24 hour format."/>
+										<label class="form-check-label" for="show24Hour"> Show 24 Hour Time</label>
+									</div>
+									<div class="form-group">
+										<input type="checkbox" value="showSeconds" id="showSeconds" aria-label="Show times with or without seconds." checked="checked" />
+										<label class="form-check-label" for="showSeconds"> Show Seconds</label>
+									</div>
+									<div class="form-group">
+									  <input type="checkbox" value="showPulsing" id="pulsing" aria-label="Show pulsing time separator or not." checked="checked" />
+										<label class="form-check-label" for="pulsing"> Pulsing</label>
+									</div>
+								  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#add-time-zone-dialog" aria-label="Click here to add a new clock for a specific time zone.">
+								    Add Time Zone
+								  </button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+  <!-- Modal -->
+  <div class="modal fade" id="add-time-zone-dialog" tabindex="-1" role="dialog" aria-labelledby="add-time-zone-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="display:block;">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="add-time-zone-label">Add Time Zone</h4>
+        </div>
+        <div id="time-zone-map" class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+          <button id="add-time-zone" type="button" data-dismiss="modal" class="btn btn-default btn-primary">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The main script controller -->
+	<script src="index.js"></script>
+</body>
+</html>

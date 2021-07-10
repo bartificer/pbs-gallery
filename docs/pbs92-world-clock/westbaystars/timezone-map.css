@@ -1,0 +1,59 @@
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-opacity: .5;
+  stroke-width: .5px;
+  pointer-events: none;
+}
+
+.timezone {
+  stroke-opacity: .5;
+  stroke-width: .5px;
+}
+
+.timezones :hover {
+  opacity: .90;
+  stroke-opacity: 1;
+  stroke-width: 1px;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+  pointer-events: none;
+}
+
+div.tooltip  {
+  color: #222;
+  background: #fff;
+  padding: .5em;
+  text-shadow: #f5f5f5 0 1px 0;
+  border-radius: 2px;
+  box-shadow: 0px 0px 2px 0px #a6a6a6;
+  opacity: 0.9;
+  position: absolute;
+}
+
+div.tooltip .sep {
+  color: #444;
+  font-weight: 300;
+}
+
+.hidden {
+  display: none;
+}
+
+.night {
+  /* stroke: steelblue; */
+  fill: steelblue;
+  fill-opacity: .25;
+}
+
+.search {
+  
+}
+
+.compare {
+  font-family: monospace;
+}
