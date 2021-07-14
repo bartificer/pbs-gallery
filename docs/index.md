@@ -43,7 +43,7 @@ Set at the end of [instalment 89](https://bartificer.net/pbs89) with sample solu
 
 Set at the end of [instalment 92](https://bartificer.net/pbs92) with sample solutions described in [instalment 96](https://bartificer.net/pbs96).
 
-* *no entries added yet*
+* [Solution from Michael Westbay](pbs92-world-clock/westbaystars) Analog and digital world clock created with classes for the two types.
 
 ## Time Sharing
 
